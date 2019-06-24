@@ -8,20 +8,23 @@ class ImagesHelper
     public static function SaveImageFromRequest($request, $path, $bkpPath, $newFilename)
     {
         if(!isset($request->getUploadedFiles()["image"]))
-            return null;
-
+            return "";
+        
         $image = self::ValidateImage($request->getUploadedFiles()["image"]);
 
         if(is_null($image))
-            return null;
+            return "";
 
         $newFilename .= Files::GetExtension($image->getClientFilename());
         $destination = Files::GetPath($path, $newFilename);
 
+      
+
         //choose if watermark or not
         $saved = self::SaveImage($image, $path, $bkpPath, $destination, true);
+        
         if(!$saved)
-            return null;
+            return "";
 
         return $newFilename;
     }
@@ -30,7 +33,7 @@ class ImagesHelper
     {
         if($withWatermark)
         {
-            $image = self::WatermarkImage($image);
+            self::WatermarkImage($image);
         }
 
         try
@@ -58,6 +61,7 @@ class ImagesHelper
         }
         catch(\Exception $e)
         {
+            var_dump(":("); die();
             return false;
         }
     }
@@ -78,12 +82,51 @@ class ImagesHelper
         {
             $validatedImage = $image;
         }
+                return $validatedImage;
+
         */
-        return $validatedImage;
+        return $image;
     }
 
     public static function WatermarkImage($image)
     {
-        return $image;
+        //esta funcion reemplaza el /tmp/php por img c/ watermark
+
+        $watermark = imagecreatefrompng(Config::$watermark);
+ 
+
+        switch(Files::GetExtension($image->getClientFilename()))
+        {
+            case ".jpg":
+            case ".JPG":
+            case ".jpeg":
+            case ".JPEG":
+                $img = imagecreatefromjpeg($image->file);
+            break;
+
+            case ".png":
+            case ".PNG":
+                $img = imagecreatefrompng($image->file);
+            break;
+        }
+    
+        // Establecer los márgenes para la estampa y obtener el alto/ancho de la imagen de la estampa
+        $margen_dcho = 10;
+        $margen_inf = 10;
+        $sx = imagesx($watermark);
+        $sy = imagesy($watermark);
+
+        // Copiar la imagen de la estampa sobre nuestra foto usando los índices de márgen y el
+        // ancho de la foto para calcular la posición de la estampa. 
+        imagecopy($img, 
+            $watermark, 
+            imagesx($img) - $sx - $margen_dcho, 
+            imagesy($img) - $sy - $margen_inf, 
+            0, 0, 
+            imagesx($watermark), imagesy($watermark)
+        );
+        
+        // Imprimir y liberar memoria
+        $img = imagepng($img, $image->file);
     }
 }

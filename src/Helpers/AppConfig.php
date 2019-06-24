@@ -7,9 +7,9 @@ class AppConfig
     public static $illuminateDb = [
         'driver' => 'mysql',
         'host' => 'localhost',
-        'database' => 'tp_php',
+        'database' => 'phptemplate',
         'username' => 'root',
-        'password' => 'frnkquito',
+        'password' => '',
         'charset' => 'utf8',
         'collation' => 'utf8_unicode_ci',
         'prefix' => ''
@@ -21,11 +21,12 @@ class AppConfig
     ];
 
     public static $imagesDirectories = [
-        'mesas' => 'public/img/mesas',
-        'mesasBkp' => 'archive/img/mesas',
+        'users' => 'public/img/users',
         'empleados' => 'public/img/empleados',
-        'empleadosBkp' => 'archive/img/empleados'
-];
+        'empleadosBkp' => 'public/img/empleadosBkp'
+    ];
+
+    public static $watermark = 'public/img/watermark.png';
 
     public static $imageConstraints = [
         'size' => '500000', //0,5mb
@@ -35,14 +36,6 @@ class AppConfig
         'extensions' => [
             '.jpg', '.jpeg', '.png', '.JPG', '.JPEG', '.PNG'
         ]
-    ];
-
-    public static $empleadosRoles = [
-        "socio" => "Socio",
-        "mozo" => "Mozo",
-        "bartender" => "Bartender", //vino
-        "cervecero" => "Cervecero",
-        "cocinero" => "Cocinero" //cocina y postres (candybar)
     ];
 
 }

@@ -16,7 +16,6 @@ class AuthController
 
     $user = User::FindByUsername($data->username);
 
-
     //0 = no user, transform it to one so it matches cond
     if(!is_null($user))
     {
@@ -34,22 +33,24 @@ class AuthController
     return  JWTAuth::CreateToken($obj);
   }
 
-  public static function Register($empleado, $password)
+  public static function Register($request, $response, $args)
   {
-      $username = $empleado->username;
-      $user = new User;
-      $user->username = $username;
+    $data = json_decode($request->getBody());
 
-      $user->password = password_hash($password, PASSWORD_DEFAULT);
-      $user->role = $empleado->role;
+    if(!isset($data->username) || !isset($data->password))
+      return $response->withJson("ingrese username/password", 400);
 
-      $user->save();
-      return $user;
+    $user = new User;
+    $user->username = $data->username;
+
+    $user->password = password_hash($data->password, PASSWORD_DEFAULT);
+    $user->role = $data->role;
+
+    $user->save();
+    return self::LogIn($request, $response, $args);
   }
 
   public static function ChangePassword()
   {
-      //create route, if is socio don't
-      //check old password or security question
   }
 }

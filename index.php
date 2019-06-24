@@ -4,8 +4,6 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Helpers\AppConfig;
-use Models\Mesa;
-use Models\Pedidos\PedidoCocina;
 
 require __DIR__.'/vendor/autoload.php';
 
@@ -21,7 +19,7 @@ $capsule->bootEloquent();
 $authRoutes = require __DIR__.'/src/Routes/AuthRoutes.php';
 $authRoutes($app);
 
-$mesaRoutes = require __DIR__.'/src/Routes/Admin/MesasRoutes.php';
-$mesaRoutes($app);
+$empleadosRoutes = require __DIR__.'/src/Routes/Admin/EmpleadosRoutes.php';
+$empleadosRoutes($app);
 
 $app->run();
